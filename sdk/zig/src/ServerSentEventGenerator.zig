@@ -169,7 +169,7 @@ pub fn mergeFragments(
 ) !void {
     var data = ArrayList(u8).empty;
     errdefer data.deinit(self.allocator);
-    const writer = data.writer();
+    const writer = data.writer(self.allocator);
 
     if (options.selector) |selector| {
         try writer.print(
@@ -210,7 +210,7 @@ pub fn mergeFragments(
 
     try self.send(
         .merge_fragments,
-        try data.toOwnedSlice(),
+        try data.toOwnedSlice(self.allocator),
         .{
             .event_id = options.event_id,
             .retry_duration = options.retry_duration,
